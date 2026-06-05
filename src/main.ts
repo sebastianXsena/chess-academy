@@ -10,6 +10,9 @@ async function bootstrap() {
   // Habilitar CORS para evitar errores en Swagger o al conectar el Frontend
   app.enableCors();
 
+  // Prefijo global: todos los endpoints quedan en /api/...
+  app.setGlobalPrefix('api');
+
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }));
 
   const config = new DocumentBuilder()
@@ -19,7 +22,8 @@ async function bootstrap() {
     .addBearerAuth()
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, documentFactory);
+  // Swagger ahora en /docs para no colisionar con el prefijo /api
+  SwaggerModule.setup('docs', app, documentFactory);
 
   await app.listen(process.env.PORT ?? 3000);
 }

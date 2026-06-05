@@ -643,11 +643,8 @@ document.addEventListener('DOMContentLoaded', async function () {
       localStorage.setItem('chessmaster_token', data.access_token);
       localStorage.setItem('chessmaster_user', JSON.stringify(data.user));
 
-      if (data.user.role === 'ADMIN') {
-        window.location.href = 'admin.html';
-      } else {
-        window.location.href = 'dashboard.html';
-      }
+      // Todos los roles van al dashboard (que se adapta por rol internamente)
+      window.location.href = 'dashboard.html';
     } catch (err) {
       errDiv.textContent = '❌ ' + (err.message.includes('Invalid') ? 'Email o contraseña incorrectos.' : err.message);
       errDiv.style.display = 'block';

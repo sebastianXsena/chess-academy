@@ -17,9 +17,12 @@ export class AuthService {
       throw new BadRequestException('Email already in use');
     }
 
-    const hashedPassword = await bcrypt.hash(dto.password, 10);
+    // Extraer passwordConfirm antes de guardar
+    const { passwordConfirm, password, ...rest } = dto;
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     const user = await this.usersService.create({
-      ...dto,
+      ...rest,
       password: hashedPassword,
     });
 
@@ -29,7 +32,13 @@ export class AuthService {
       user: {
         id: user.id,
         email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        username: user.username,
         role: user.role,
+        age: user.age,
+        city: user.city,
+        phone: user.phone,
       },
     };
   }
@@ -51,7 +60,13 @@ export class AuthService {
       user: {
         id: user.id,
         email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        username: user.username,
         role: user.role,
+        age: user.age,
+        city: user.city,
+        phone: user.phone,
       },
     };
   }

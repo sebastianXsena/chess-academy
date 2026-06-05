@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateMaterialDto {
   @IsNotEmpty()
@@ -12,6 +12,10 @@ export class CreateMaterialDto {
   @IsOptional()
   @IsString()
   contentUrl?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  isPremium?: boolean; // true = solo STUDENT/ADMIN, false = todos (default)
 }
 
 export class UpdateMaterialDto {
@@ -26,4 +30,8 @@ export class UpdateMaterialDto {
   @IsOptional()
   @IsString()
   contentUrl?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  isPremium?: boolean;
 }

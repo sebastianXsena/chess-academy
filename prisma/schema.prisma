@@ -15,6 +15,7 @@ datasource db {
 enum Role {
   ADMIN
   STUDENT
+  USER
 }
 
 model User {
@@ -24,8 +25,12 @@ model User {
   username  String   @unique
   email     String   @unique
   password  String
-  role      Role     @default(STUDENT)
+  role      Role     @default(USER)
   active    Boolean  @default(true)
+
+  age       Int?
+  city      String?
+  phone     String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -38,9 +43,10 @@ model Material {
   title       String
   description String?
   contentUrl  String?  // PDF o Video URL
+  isPremium   Boolean  @default(false) // false = contenido gratis, true = solo STUDENT/ADMIN
   authorId    String
   author      User     @relation(fields: [authorId], references: [id])
-  
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }

@@ -40,6 +40,9 @@
         <a href="#" class="sidebar-link" data-view="progress" onclick="switchView('progress', this)">
           <span class="sidebar-link-icon">📈</span> Mi Progreso
         </a>
+        <a href="#" class="sidebar-link" data-view="free-materials" onclick="switchView('free-materials', this)">
+          <span class="sidebar-link-icon">📖</span> Aprendizaje Gratuito
+        </a>
       </div>
 
       <!-- Solo visible para STUDENT/ADMIN -->
@@ -176,9 +179,15 @@
           <p>Ve tus estadísticas</p>
           <span class="dash-quick-arrow">→</span>
         </div>
+        <div class="dash-quick-card" onclick="switchView('free-materials', document.querySelector('[data-view=free-materials]'))">
+          <div class="dash-quick-icon">📖</div>
+          <h4>Aprendizaje Gratuito</h4>
+          <p>Materiales abiertos para todos</p>
+          <span class="dash-quick-arrow">→</span>
+        </div>
         <div class="dash-quick-card dash-quick-card-locked" id="quick-materials" onclick="switchView('materials', document.querySelector('[data-view=materials]'))">
           <div class="dash-quick-icon">🎯</div>
-          <h4>Materiales</h4>
+          <h4>Materiales Premium</h4>
           <p>Recursos exclusivos Premium</p>
           <span class="dash-quick-arrow">→</span>
           <div class="lock-badge" id="quick-lock">🔒 Premium</div>
@@ -302,6 +311,22 @@
       <div class="dash-info-box">
         <span class="dash-info-icon">💡</span>
         <p>Completa cursos para avanzar en tu camino de maestro. Cada lección cuenta.</p>
+      </div>
+    </section>
+
+    <!-- ==================== VISTA: APRENDIZAJE GRATUITO ==================== -->
+    <section class="dash-view" id="view-free-materials">
+      <div class="dash-section-header">
+        <span class="section-label">Para todos</span>
+        <h3>Aprendizaje <span class="accent">Gratuito</span></h3>
+      </div>
+      <p style="color: var(--color-text-muted); margin-bottom: 2rem;">Explora los recursos y lecciones que nuestros maestros han puesto a tu disposición de forma totalmente gratuita.</p>
+
+      <div class="dash-materials-grid" id="free-materials-grid">
+        <!-- Se llena dinámicamente desde JS -->
+        <div style="grid-column: 1 / -1; text-align:center; color: var(--color-text-muted); padding: 2rem;">
+          Cargando materiales gratuitos...
+        </div>
       </div>
     </section>
 
@@ -506,7 +531,7 @@
         <h3>Gestión de <span class="accent">Materiales</span></h3>
       </div>
       <div class="admin-actions-bar">
-        <button class="btn btn-primary" style="font-size:0.85rem;" onclick="showToastMsg('Función próximamente disponible')">
+        <button class="btn btn-primary" style="font-size:0.85rem;" onclick="openMaterialModal()">
           ➕ Nuevo Material
         </button>
       </div>
@@ -521,7 +546,7 @@
               <th>Acciones</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody id="admin-materials-tbody">
             <tr>
               <td colspan="5" style="text-align:center; color: var(--color-text-muted); padding: 2rem;">
                 No hay materiales aún
@@ -531,6 +556,54 @@
         </table>
       </div>
     </section>
+
+    <!-- MODAL: MATERIAL (Crear / Editar) -->
+    <div class="modal hidden" id="material-modal">
+      <div class="modal-content" style="max-width: 500px;">
+        <div class="modal-header">
+          <div style="display:flex; align-items:center; gap:0.75rem;">
+            <div class="modal-icon" style="width:36px; height:36px; font-size:1.1rem;">📋</div>
+            <h2 id="material-modal-title">Nuevo Material</h2>
+          </div>
+          <button class="modal-close" onclick="closeMaterialModal()">×</button>
+        </div>
+        <div class="modal-body">
+          <form id="material-form" onsubmit="saveMaterial(event)" style="display: flex; flex-direction: column; gap: 1rem;">
+            <input type="hidden" id="mat-id" value="">
+            
+            <div class="form-group" style="display: flex; flex-direction: column; gap: 0.25rem;">
+              <label for="mat-title" style="font-size: 0.85rem; font-weight: 500; color: #fff;">Título *</label>
+              <input type="text" id="mat-title" required style="padding: 0.75rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: #fff;">
+            </div>
+
+            <div class="form-group" style="display: flex; flex-direction: column; gap: 0.25rem;">
+              <label for="mat-description" style="font-size: 0.85rem; font-weight: 500; color: #fff;">Descripción</label>
+              <textarea id="mat-description" rows="3" style="padding: 0.75rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: #fff; resize: vertical;"></textarea>
+            </div>
+
+            <div class="form-group" style="display: flex; flex-direction: column; gap: 0.25rem;">
+              <label for="mat-file" style="font-size: 0.85rem; font-weight: 500; color: #fff;">Subir Archivo (PDF, Video, etc.)</label>
+              <input type="file" id="mat-file" style="padding: 0.75rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: #fff;">
+            </div>
+
+            <div class="form-group" style="display: flex; flex-direction: column; gap: 0.25rem;">
+              <label for="mat-url" style="font-size: 0.85rem; font-weight: 500; color: #fff;">O usar un enlace externo (URL)</label>
+              <input type="url" id="mat-url" style="padding: 0.75rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: #fff;" placeholder="https://...">
+            </div>
+
+            <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem;">
+              <input type="checkbox" id="mat-premium" style="width: 1.1rem; height: 1.1rem; accent-color: var(--color-accent);">
+              <label for="mat-premium" style="font-size: 0.9rem; color: var(--color-accent); font-weight: 600;">¿Es contenido Premium? (Solo Estudiantes/Admin)</label>
+            </div>
+
+            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+              <button type="button" class="btn btn-secondary" style="flex: 1; padding: 0.75rem;" onclick="closeMaterialModal()">Cancelar</button>
+              <button type="submit" class="btn btn-primary" id="btn-save-material" style="flex: 1; padding: 0.75rem;">Guardar Material</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
 
     <!-- ==================== VISTA: ADMIN STATS ==================== -->
     <section class="dash-view" id="view-admin-stats">

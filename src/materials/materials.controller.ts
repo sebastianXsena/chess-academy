@@ -8,7 +8,12 @@ import {
   Put,
   UseGuards,
   Request,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
 import { MaterialsService } from './materials.service';
 import { CreateMaterialDto, UpdateMaterialDto } from './dto/material.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -26,7 +31,19 @@ export class MaterialsController {
 
   @Post()
   @Roles(Role.ADMIN)
-  create(@Request() req, @Body() createMaterialDto: CreateMaterialDto) {
+  @UseInterceptors(FileInterceptor('file', {
+    storage: diskStorage({
+      destination: './uploads',
+      filename: (req, file, cb) => {
+        const randomName = Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('');
+        cb(null, `${randomName}${extname(file.originalname)}`);
+      }
+    })
+  }))
+  create(@Request() req, @Body() createMaterialDto: CreateMaterialDto, @UploadedFile() file: Express.Multer.File) {
+    if (file) {
+      createMaterialDto.contentUrl = `/uploads/${file.filename}`;
+    }
     return this.materialsService.create(req.user.id, createMaterialDto);
   }
 
@@ -44,7 +61,19 @@ export class MaterialsController {
 
   @Put(':id')
   @Roles(Role.ADMIN)
-  update(@Param('id') id: string, @Body() updateMaterialDto: UpdateMaterialDto) {
+  @UseInterceptors(FileInterceptor('file', {
+    storage: diskStorage({
+      destination: './uploads',
+      filename: (req, file, cb) => {
+        const randomName = Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('');
+        cb(null, `${randomName}${extname(file.originalname)}`);
+      }
+    })
+  }))
+  update(@Param('id') id: string, @Body() updateMaterialDto: UpdateMaterialDto, @UploadedFile() file: Express.Multer.File) {
+    if (file) {
+      updateMaterialDto.contentUrl = `/uploads/${file.filename}`;
+    }
     return this.materialsService.update(id, updateMaterialDto);
   }
 

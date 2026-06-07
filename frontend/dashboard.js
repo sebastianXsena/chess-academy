@@ -11,7 +11,16 @@ if (!token || !user) {
 }
 
 // --- Constants ---
-const API_BASE = 'http://localhost:3000/api';
+const BACKEND_URL = 'http://localhost:3000';
+const API_BASE = `${BACKEND_URL}/api`;
+
+function getFullUrl(url) {
+  if (!url) return '#';
+  if (url.startsWith('/uploads')) {
+    return `${BACKEND_URL}${url}`;
+  }
+  return url;
+}
 
 // ============================================================
 // INIT
@@ -21,9 +30,10 @@ document.addEventListener('DOMContentLoaded', () => {
   initRoleBasedUI();
   loadProfileData();
 
-  // Admin: cargar usuarios
+  // Admin: cargar usuarios y materiales
   if (user.role === 'ADMIN') {
     loadAdminUsers();
+    loadAdminMaterials();
   }
 });
 
@@ -170,12 +180,212 @@ function renderUsersTable(users) {
 }
 
 // ============================================================
+// ADMIN — cargar materiales desde la API
+// ============================================================
+async function loadAdminMaterials() {
+  try {
+    const res = await fetch(`${API_BASE}/materials`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    if (!res.ok) throw new Error('No se pudo cargar materiales');
+
+    const materials = await res.json();
+    renderMaterialsTable(materials);
+  } catch (err) {
+    console.warn('Admin materiales:', err.message);
+    document.getElementById('admin-materials-tbody').innerHTML = `
+      <tr>
+        <td colspan="5" style="text-align:center; color: var(--color-text-muted); padding: 2rem;">
+          No se pudo cargar la lista de materiales. Verifica que el endpoint esté disponible.
+        </td>
+      </tr>`;
+  }
+}
+
+let currentMaterials = [];
+
+function renderMaterialsTable(materials) {
+  currentMaterials = materials;
+  const tbody = document.getElementById('admin-materials-tbody');
+  if (!materials.length) {
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color: var(--color-text-muted); padding: 2rem;">No hay materiales registrados</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = materials.map(m => `
+    <tr>
+      <td>
+        <div style="font-weight:600; font-size:0.88rem;">${m.title}</div>
+        <div style="font-size:0.75rem; color:var(--color-text-muted); max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${m.description || '—'}</div>
+      </td>
+      <td>
+        <a href="${m.contentUrl || '#'}" target="_blank" style="color:var(--color-accent); text-decoration:none;">Enlace</a>
+      </td>
+      <td><span class="role-pill ${m.isPremium ? 'STUDENT' : 'USER'}">${m.isPremium ? 'Premium' : 'Gratis'}</span></td>
+      <td style="color:var(--color-text-muted); font-size:0.85rem;">${m.author ? (m.author.firstName + ' ' + m.author.lastName) : '—'}</td>
+      <td>
+        <div style="display:flex; gap:0.5rem;">
+          <button class="btn btn-secondary" style="padding: 0.3rem 0.6rem; font-size: 0.75rem;" onclick="openMaterialModal('${m.id}')">Editar</button>
+          <button class="btn" style="padding: 0.3rem 0.6rem; font-size: 0.75rem; background: rgba(239,68,68,0.12); color: #f87171; border: 1px solid rgba(239,68,68,0.25);" onclick="deleteMaterial('${m.id}')">Eliminar</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function openMaterialModal(id = null) {
+  document.getElementById('material-modal').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+
+  const form = document.getElementById('material-form');
+  form.reset();
+
+  const titleEl = document.getElementById('material-modal-title');
+
+  if (id) {
+    titleEl.textContent = 'Editar Material';
+    const mat = currentMaterials.find(m => m.id === id);
+    if (mat) {
+      document.getElementById('mat-id').value = mat.id;
+      document.getElementById('mat-title').value = mat.title || '';
+      document.getElementById('mat-description').value = mat.description || '';
+      document.getElementById('mat-url').value = mat.contentUrl || '';
+      document.getElementById('mat-premium').checked = !!mat.isPremium;
+    }
+  } else {
+    titleEl.textContent = 'Nuevo Material';
+    document.getElementById('mat-id').value = '';
+  }
+}
+
+function closeMaterialModal() {
+  document.getElementById('material-modal').classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+async function saveMaterial(event) {
+  event.preventDefault();
+  const btn = document.getElementById('btn-save-material');
+  const originalText = btn.textContent;
+  btn.textContent = '⏳ Guardando...';
+  btn.disabled = true;
+
+  const id = document.getElementById('mat-id').value;
+  const fileInput = document.getElementById('mat-file');
+  const file = fileInput.files[0];
+
+  const formData = new FormData();
+  formData.append('title', document.getElementById('mat-title').value);
+  formData.append('description', document.getElementById('mat-description').value);
+  formData.append('isPremium', document.getElementById('mat-premium').checked);
+  
+  if (file) {
+    formData.append('file', file);
+  } else {
+    formData.append('contentUrl', document.getElementById('mat-url').value);
+  }
+
+  try {
+    const url = id ? `${API_BASE}/materials/${id}` : `${API_BASE}/materials`;
+    const method = id ? 'PUT' : 'POST';
+
+    const res = await fetch(url, {
+      method,
+      headers: { 
+        Authorization: `Bearer ${token}`
+      },
+      body: formData
+    });
+
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}));
+      throw new Error(errData.message || 'Error al guardar material');
+    }
+
+    showToastMsg('✅ Material guardado exitosamente');
+    closeMaterialModal();
+    loadAdminMaterials();
+  } catch (err) {
+    showToastMsg('❌ ' + err.message);
+  } finally {
+    btn.textContent = originalText;
+    btn.disabled = false;
+  }
+}
+
+async function deleteMaterial(id) {
+  if (!confirm('¿Estás seguro de que deseas eliminar este material?')) return;
+
+  try {
+    const res = await fetch(`${API_BASE}/materials/${id}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}));
+      throw new Error(errData.message || 'Error al eliminar material');
+    }
+
+    showToastMsg('🗑️ Material eliminado');
+    loadAdminMaterials();
+  } catch (err) {
+    showToastMsg('❌ ' + err.message);
+  }
+}
+
+// ============================================================
+// APRENDIZAJE GRATUITO — cargar materiales libres
+// ============================================================
+async function loadFreeMaterials() {
+  try {
+    const res = await fetch(`${API_BASE}/materials`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    if (!res.ok) throw new Error('No se pudo cargar los materiales gratuitos');
+
+    const materials = await res.json();
+    const freeMaterials = materials.filter(m => m.isPremium === false);
+    renderFreeMaterialsGrid(freeMaterials);
+  } catch (err) {
+    console.warn('Free materiales:', err.message);
+    document.getElementById('free-materials-grid').innerHTML = `
+      <div style="grid-column: 1 / -1; text-align:center; color: var(--color-text-muted); padding: 2rem;">
+        No se pudo cargar el material gratuito.
+      </div>`;
+  }
+}
+
+function renderFreeMaterialsGrid(materials) {
+  const grid = document.getElementById('free-materials-grid');
+  if (!materials.length) {
+    grid.innerHTML = `<div style="grid-column: 1 / -1; text-align:center; color: var(--color-text-muted); padding: 2rem;">No hay materiales gratuitos disponibles por el momento.</div>`;
+    return;
+  }
+
+  grid.innerHTML = materials.map(m => `
+    <div class="material-card">
+      <div class="material-type-badge ${m.contentUrl && (m.contentUrl.includes('youtube') || m.contentUrl.includes('youtu.be')) ? 'video' : ''}">
+        ${m.contentUrl && (m.contentUrl.includes('youtube') || m.contentUrl.includes('youtu.be')) ? 'VIDEO' : 'DOC'}
+      </div>
+      <div class="material-icon">📚</div>
+      <h4>${m.title}</h4>
+      <p>${m.description || 'Sin descripción'}</p>
+      <a href="${getFullUrl(m.contentUrl)}" target="_blank" class="btn btn-primary" style="margin-top:auto; text-align:center;">Abrir Material</a>
+    </div>
+  `).join('');
+}
+
+// ============================================================
 // NAVIGATION — switch de vistas
 // ============================================================
 const viewTitles = {
   'overview':        'Inicio',
   'courses':         'Mis Cursos',
   'progress':        'Mi Progreso',
+  'free-materials':  'Aprendizaje Gratuito',
   'materials':       'Materiales',
   'sessions':        'Sesiones en Vivo',
   'profile':         'Mi Perfil',
@@ -207,6 +417,12 @@ function switchView(viewId, linkEl) {
   // Cargar datos según vista
   if (viewId === 'admin-users' && user.role === 'ADMIN') {
     loadAdminUsers();
+  }
+  if (viewId === 'admin-materials' && user.role === 'ADMIN') {
+    loadAdminMaterials();
+  }
+  if (viewId === 'free-materials') {
+    loadFreeMaterials();
   }
 }
 

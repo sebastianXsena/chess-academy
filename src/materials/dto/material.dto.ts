@@ -1,4 +1,5 @@
 import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class CreateMaterialDto {
   @IsNotEmpty()
@@ -14,6 +15,7 @@ export class CreateMaterialDto {
   contentUrl?: string;
 
   @IsOptional()
+  @Transform(({ value }) => value === 'true' || value === true)
   @IsBoolean()
   isPremium?: boolean; // true = solo STUDENT/ADMIN, false = todos (default)
 }
@@ -32,6 +34,7 @@ export class UpdateMaterialDto {
   contentUrl?: string;
 
   @IsOptional()
+  @Transform(({ value }) => value === 'true' || value === true)
   @IsBoolean()
   isPremium?: boolean;
 }

@@ -1,6 +1,7 @@
 # compiled output
-backend/dist
-node_modules
+/dist
+/node_modules
+/build
 
 # Logs
 logs
@@ -15,11 +16,11 @@ lerna-debug.log*
 .DS_Store
 
 # Tests
-backend/coverage
-.nyc_output
+/coverage
+/.nyc_output
 
 # IDEs and editors
-.idea
+/.idea
 .project
 .classpath
 .c9/

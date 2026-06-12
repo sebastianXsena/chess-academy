@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="ChessMaster Academy: Aprende ajedrez con nuestros cursos profesionales. Desde principiante hasta ajedrez competitivo. Desarrolla creatividad, disciplina y pensamiento estratégico.">
+  <meta property="og:title" content="ChessMaster Academy - Cursos de Ajedrez en Línea">
+  <meta property="og:description"
+    content="Domina el arte del ajedrez y desarrolla habilidades para la vida con nuestros cursos diseñados por maestros profesionales.">
+  <title>ChessMaster Academy - Cursos de Ajedrez</title>
+  <link rel="stylesheet" href="../styles/main.css">
+</head>
+
+<body>
+
+  <!-- === HEADER === -->
+  <header class="header" id="header">
+    <nav class="navbar">
+      <div class="container">
+        <div class="logo" onclick="scrollToTop()">
+          <span class="logo-icon">♚</span>
+          <h1>ChessMaster Academy</h1>
+        </div>
+        <ul class="nav-menu">
+          <li><a href="#inicio">Inicio</a></li>
+          <li><a href="#info">Beneficios</a></li>
+          <li><a href="#habilidades">Habilidades</a></li>
+          <li><a href="#cursos">Cursos</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="#contacto">Contacto</a></li>
+          <li><a href="#carrito" class="btn-carrito" onclick="openCart(); return false;">Carrito<span
+                id="cart-count">0</span></a></li>
+        </ul>
+        <!-- Botones de Autenticación -->
+        <div class="nav-auth-buttons" id="auth-buttons">
+          <button class="nav-btn-login" onclick="openLogin()">Iniciar Sesión</button>
+          <button class="nav-btn-register" onclick="openRegister()">Registrarse ♟</button>
+        </div>
+        <!-- Menu usuario logueado -->
+        <div class="nav-user-menu" id="user-menu" style="display:none;">
+          <a href="dashboard.html" id="platform-link" class="nav-btn-platform">Mi Plataforma ♚</a>
+          <div class="nav-user-chip">
+            <div class="nav-user-avatar" id="nav-avatar">U</div>
+            <span id="user-name-display">Usuario</span>
+          </div>
+          <button class="nav-btn-logout" onclick="logoutUser()">Salir</button>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- === HERO === -->
+  <section class="hero" id="inicio">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="particles-bg" id="particles"></div>
+
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-label">Aprende · Entiende · Domina</div>
+        <h2>
+          Conviértete en un<br>
+          Maestro del <span class="accent">Ajedrez</span>
+        </h2>
+        <p class="hero-desc">
+          Cursos online diseñados por maestros internacionales. Aprende ajedrez y desarrolla habilidades que
+          transformarán tu vida: creatividad, disciplina y pensamiento estratégico.
+        </p>
+        <div class="hero-buttons">
+          <a href="#cursos" class="btn btn-primary">Ver Cursos ♟</a>
+          <a href="#info" class="btn btn-secondary">Conoce Más</a>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <span class="stat-number" data-target="2800">0</span>
+            <span class="stat-label">Estudiantes</span>
+          </div>
+          <div class="hero-stat">
+            <span class="stat-number" data-target="48">0</span>
+            <span class="stat-label">Lecciones</span>
+          </div>
+          <div class="hero-stat">
+            <span class="stat-number" data-target="98">0</span>
+            <span class="stat-label">% Satisfacción</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="chess-board-container">
+          <div class="board-glow"></div>
+          <div class="chess-board" id="chess-board"></div>
+          <div class="floating-pieces">
+            <span class="floating-piece">♕</span>
+            <span class="floating-piece">♖</span>
+            <span class="floating-piece">♘</span>
+            <span class="floating-piece">♗</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- === STATS SECTION === -->
+  <section class="stats-section">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-card reveal delay-1">
+          <span class="stat-number" data-target="15">0</span>
+          <span class="stat-label">Maestros Internacionales</span>
+        </div>
+        <div class="stat-card reveal delay-2">
+          <span class="stat-number" data-target="3">0</span>
+          <span class="stat-label">Niveles de Aprendizaje</span>
+        </div>
+        <div class="stat-card reveal delay-3">
+          <span class="stat-number" data-target="170">0</span>
+          <span class="stat-label">Ejercicios Prácticos</span>
+        </div>
+        <div class="stat-card reveal delay-4">
+          <span class="stat-number" data-target="30">0</span>
+          <span class="stat-label">Días de Garantía</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- === INFO / BENEFICIOS === -->
+  <section id="info" class="info-section">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-label">¿Por qué el ajedrez?</div>
+        <h2>Beneficios que <span>transforman</span> tu mente</h2>
+        <p>El ajedrez es mucho más que un juego. Es una herramienta poderosa para desarrollar capacidades cognitivas y
+          emocionales que te servirán toda la vida.</p>
+      </div>
+      <div class="benefits-grid">
+        <div class="benefit-card reveal delay-1" onclick="openPieceModal('peon')">
+          <div class="benefit-icon-wrap">🧠</div>
+          <h3>Mejora tu Concentración</h3>
+          <p>Desarrolla la capacidad de enfoque profundo y sostenido en cualquier tarea.</p>
+          <span class="see-more">Aprende más</span>
+        </div>
+        <div class="benefit-card reveal delay-2" onclick="openPieceModal('caballo')">
+          <div class="benefit-icon-wrap">💡</div>
+          <h3>Creatividad e Innovación</h3>
+          <p>El ajedrez estimula el pensamiento lateral y la resolución creativa de problemas.</p>
+          <span class="see-more">Aprende más</span>
+        </div>
+        <div class="benefit-card reveal delay-3" onclick="openPieceModal('alfil')">
+          <div class="benefit-icon-wrap">📊</div>
+          <h3>Análisis y Lógica</h3>
+          <p>Desarrolla habilidades analíticas y de resolución de problemas complejos.</p>
+          <span class="see-more">Aprende más</span>
+        </div>
+        <div class="benefit-card reveal delay-4" onclick="openPieceModal('torre')">
+          <div class="benefit-icon-wrap">🎯</div>
+          <h3>Toma de Decisiones</h3>
+          <p>Aprende a tomar decisiones rápidas y calculadas bajo presión.</p>
+          <span class="see-more">Aprende más</span>
+        </div>
+        <div class="benefit-card reveal delay-5" onclick="openPieceModal('reina')">
+          <div class="benefit-icon-wrap">🏆</div>
+          <h3>Disciplina y Paciencia</h3>
+          <p>Cultiva la paciencia y disciplina necesarias para alcanzar el éxito.</p>
+          <span class="see-more">Aprende más</span>
+        </div>
+        <div class="benefit-card reveal delay-6" onclick="openPieceModal('rey')">
+          <div class="benefit-icon-wrap">🚀</div>
+          <h3>Liderazgo Estratégico</h3>
+          <p>Desarrolla una mentalidad de líder y visión estratégica a largo plazo.</p>
+          <span class="see-more">Aprende más</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- === HABILIDADES DE VIDA === -->
+  <section id="habilidades" class="skills-section">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-label">Más allá del tablero</div>
+        <h2>Habilidades para <span>la vida</span></h2>
+        <p>Cada pieza del ajedrez representa una lección. Aprende a aplicar la sabiduría del tablero en tu vida
+          cotidiana y profesional.</p>
+      </div>
+      <div class="skills-grid">
+        <div class="skill-card reveal-left delay-1">
+          <div class="skill-icon">♟</div>
+          <div class="skill-content">
+            <h3>Perseverancia del Peón</h3>
+            <p>El peón avanza paso a paso y puede convertirse en reina. Así como en la vida, la constancia y
+              perseverancia te llevan a la grandeza sin importar los comienzos humildes.</p>
+          </div>
+        </div>
+        <div class="skill-card reveal-right delay-1">
+          <div class="skill-icon">♘</div>
+          <div class="skill-content">
+            <h3>Pensamiento del Caballo</h3>
+            <p>El caballo salta sobre obstáculos y piensa diferente. Aprende a romper convenciones y a innovar para
+              encontrar soluciones únicas a cualquier problema.</p>
+          </div>
+        </div>
+        <div class="skill-card reveal-left delay-2">
+          <div class="skill-icon">♗</div>
+          <div class="skill-content">
+            <h3>Visión del Alfil</h3>
+            <p>El alfil ve el tablero en diagonales. En la vida, cultivar una perspectiva única y analítica te permite
+              descubrir oportunidades que otros pasan por alto.</p>
+          </div>
+        </div>
+        <div class="skill-card reveal-right delay-2">
+          <div class="skill-icon">♖</div>
+          <div class="skill-content">
+            <h3>Estructura de la Torre</h3>
+            <p>La torre se mueve en línea recta con disciplina y propósito. El orden y la estructura son la base del
+              éxito duradero en cualquier área de tu vida.</p>
+          </div>
+        </div>
+        <div class="skill-card reveal-left delay-3">
+          <div class="skill-icon">♕</div>
+          <div class="skill-content">
+            <h3>Versatilidad de la Reina</h3>
+            <p>La reina domina todo el tablero con adaptabilidad. Las personas más exitosas son aquellas que pueden
+              adaptarse y operar eficientemente en múltiples contextos.</p>
+          </div>
+        </div>
+        <div class="skill-card reveal-right delay-3">
+          <div class="skill-icon">♔</div>
+          <div class="skill-content">
+            <h3>Liderazgo del Rey</h3>
+            <p>El rey no es el más fuerte, pero es el más importante. El verdadero liderazgo consiste en guiar
+              estratégicamente, proteger al equipo y mantener el objetivo claro.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- === CURSOS === -->
+  <section id="cursos" class="courses-section">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-label">Nuestros programas</div>
+        <h2>Cursos <span>Destacados</span></h2>
+        <p>Desde tus primeros movimientos hasta el ajedrez competitivo. Encuentra el nivel perfecto para ti.</p>
+      </div>
+      <div class="courses-grid">
+        <!-- Curso 1: Principiante -->
+        <div class="course-card reveal delay-1">
+          <div class="course-badge badge-beginner">Principiante</div>
+          <h3>♟ Fundamentos del Ajedrez</h3>
+          <p class="course-description">Aprende las reglas básicas, el movimiento de piezas y los conceptos
+            fundamentales que necesitas para empezar a jugar.</p>
+          <ul class="course-features">
+            <li>8 lecciones en video</li>
+            <li>20 ejercicios prácticos</li>
+            <li>Certificado digital</li>
+            <li>Acceso de por vida</li>
+          </ul>
+          <div class="course-footer">
+            <span class="price">$19.99</span>
+            <button class="btn btn-secondary" onclick="addToCart('Fundamentos del Ajedrez', 19.99)">Agregar ♟</button>
+          </div>
+        </div>
+
+        <!-- Curso 2: Intermedio (Destacado) -->
+        <div class="course-card featured reveal delay-2">
+          <div class="course-badge badge-popular">⭐ Más Popular</div>
+          <h3>♘ Estrategia Intermedia</h3>
+          <p class="course-description">Domina aperturas, medio juego y finales con estrategia avanzada. Analiza
+            partidas de grandes maestros.</p>
+          <ul class="course-features">
+            <li>15 lecciones en video</li>
+            <li>50 ejercicios avanzados</li>
+            <li>Análisis de partidas reales</li>
+            <li>Soporte por email</li>
+            <li>Acceso de por vida</li>
+          </ul>
+          <div class="course-footer">
+            <span class="price">$49.99</span>
+            <button class="btn btn-primary" onclick="addToCart('Estrategia Intermedia', 49.99)">Agregar ♘</button>
+          </div>
+        </div>
+
+        <!-- Curso 3: Avanzado -->
+        <div class="course-card reveal delay-3">
+          <div class="course-badge badge-advanced">Avanzado</div>
+          <h3>♖ Ajedrez Competitivo</h3>
+          <p class="course-description">Preparación para competiciones y análisis profundo de aperturas con metodología
+            de maestros internacionales.</p>
+          <ul class="course-features">
+            <li>20 lecciones magistrales</li>
+            <li>100+ ejercicios tácticos</li>
+            <li>Análisis con maestros</li>
+            <li>Sesiones en vivo mensuales</li>
+            <li>Soporte prioritario</li>
+            <li>Acceso de por vida</li>
+          </ul>
+          <div class="course-footer">
+            <span class="price">$99.99</span>
+            <button class="btn btn-secondary" onclick="addToCart('Ajedrez Competitivo', 99.99)">Agregar ♖</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- === MODALES DE PIEZAS === -->
+  <div id="peon-modal" class="modal hidden">
+    <div class="modal-content piece-modal">
+      <button class="close-btn" onclick="closePieceModal()">×</button>
+      <div class="modal-header">
+        <span class="modal-icon">♙</span>
+        <h2>Peón</h2>
+      </div>
+      <div class="modal-body">
+        <h3>Perseverancia y Crecimiento</h3>
+        <p><strong>Movimiento en el tablero:</strong> El peón se mueve hacia adelante una casilla (o dos si es su primer
+          movimiento). Captura diagonalmente hacia adelante.</p>
+        <p><strong>Significado simbólico:</strong> Aunque parece la pieza más débil, un peón tiene un potencial
+          increíble. Cuando llega al final del tablero, puede promocionarse a cualquier otra pieza. Esto simboliza el
+          crecimiento, la perseverancia y cómo los pequeños pasos constantes llevan al éxito.</p>
+        <p><strong>Lección de vida:</strong> El peón nos enseña que no hay límites para el crecimiento personal. Con
+          dedicación y paciencia, cualquiera puede alcanzar sus objetivos, sin importar cuán humildes sean los
+          comienzos.</p>
+        <div class="modal-features">
+          <h4>Características clave</h4>
+          <ul>
+            <li>♟ Movimiento simple pero constante</li>
+            <li>♟ Capaz de transformarse en pieza mayor</li>
+            <li>♟ Representa el poder del trabajo consistente</li>
+            <li>♟ Símbolo de esperanza y transformación</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="caballo-modal" class="modal hidden">
+    <div class="modal-content piece-modal">
+      <button class="close-btn" onclick="closePieceModal()">×</button>
+      <div class="modal-header">
+        <span class="modal-icon">♘</span>
+        <h2>Caballo</h2>
+      </div>
+      <div class="modal-body">
+        <h3>Creatividad e Innovación</h3>
+        <p><strong>Movimiento en el tablero:</strong> El caballo se mueve en forma de "L": 2 casillas en una dirección y
+          1 casilla perpendicular. Es la única pieza que puede saltar sobre otras.</p>
+        <p><strong>Significado simbólico:</strong> El caballo es creativo y diferente. No sigue las reglas normales como
+          las demás piezas. Rompe convenciones y se mueve de manera impredecible y única. Representa a las personas
+          innovadoras que piensan fuera de lo común.</p>
+        <p><strong>Lección de vida:</strong> La vida requiere creatividad e innovación. Las mejores soluciones a menudo
+          vienen de pensar diferente y atreverse a romper las reglas establecidas. El caballo nos inspira a ser únicos y
+          creativos.</p>
+        <div class="modal-features">
+          <h4>Características clave</h4>
+          <ul>
+            <li>♘ Movimiento único e impredecible</li>
+            <li>♘ Puede saltar sobre otras piezas</li>
+            <li>♘ Representa el pensamiento lateral</li>
+            <li>♘ Símbolo de innovación y valentía</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="alfil-modal" class="modal hidden">
+    <div class="modal-content piece-modal">
+      <button class="close-btn" onclick="closePieceModal()">×</button>
+      <div class="modal-header">
+        <span class="modal-icon">♗</span>
+        <h2>Alfil</h2>
+      </div>
+      <div class="modal-body">
+        <h3>Visión y Análisis</h3>
+        <p><strong>Movimiento en el tablero:</strong> El alfil se mueve en diagonales cualquier número de casillas. Cada
+          jugador tiene 2 alfiles, uno en casilla blanca y otro en casilla negra.</p>
+        <p><strong>Significado simbólico:</strong> El alfil ve el mundo desde una perspectiva única, en diagonales. Esta
+          visión inclinada representa la capacidad analítica, la perspectiva diferente y la intuición. El alfil nos
+          enseña a ver lo que otros no ven.</p>
+        <p><strong>Lección de vida:</strong> A menudo, el verdadero progreso viene de mirar las cosas desde un ángulo
+          diferente. Los análisis profundos y la perspectiva amplia son clave para resolver problemas complejos.</p>
+        <div class="modal-features">
+          <h4>Características clave</h4>
+          <ul>
+            <li>♗ Movimiento diagonal ilimitado</li>
+            <li>♗ Visión estratégica a largo plazo</li>
+            <li>♗ Representa el análisis profundo</li>
+            <li>♗ Símbolo de perspectiva e intuición</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="torre-modal" class="modal hidden">
+    <div class="modal-content piece-modal">
+      <button class="close-btn" onclick="closePieceModal()">×</button>
+      <div class="modal-header">
+        <span class="modal-icon">♖</span>
+        <h2>Torre</h2>
+      </div>
+      <div class="modal-body">
+        <h3>Disciplina y Estructura</h3>
+        <p><strong>Movimiento en el tablero:</strong> La torre se mueve en línea recta, horizontal o verticalmente,
+          cualquier número de casillas. Es una de las piezas más poderosas.</p>
+        <p><strong>Significado simbólico:</strong> La torre se mueve de manera directa, clara y estructurada. No hay
+          ambigüedad en su movimiento. Representa el orden, la disciplina y la estructura. Una torre sola es fuerte,
+          pero dos torres juntas son prácticamente invencibles.</p>
+        <p><strong>Lección de vida:</strong> El orden y la estructura son fundamentales para el éxito. Las personas
+          disciplinadas que siguen un camino claro y directo logran sus objetivos. La colaboración multiplica el poder.
+        </p>
+        <div class="modal-features">
+          <h4>Características clave</h4>
+          <ul>
+            <li>♖ Movimiento recto y predecible</li>
+            <li>♖ Gran poder cuando se estructura bien</li>
+            <li>♖ Representa el orden y la claridad</li>
+            <li>♖ Símbolo de fuerza en equipo</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="reina-modal" class="modal hidden">
+    <div class="modal-content piece-modal">
+      <button class="close-btn" onclick="closePieceModal()">×</button>
+      <div class="modal-header">
+        <span class="modal-icon">♕</span>
+        <h2>Reina</h2>
+      </div>
+      <div class="modal-body">
+        <h3>Poder y Versatilidad</h3>
+        <p><strong>Movimiento en el tablero:</strong> La reina es la pieza más poderosa. Se mueve como la torre
+          (horizontal y vertical) y como el alfil (diagonal), cualquier número de casillas.</p>
+        <p><strong>Significado simbólico:</strong> La reina representa la versatilidad, adaptabilidad y poder. Puede
+          hacer casi cualquier cosa en el tablero. Simboliza a personas que tienen múltiples talentos y pueden resolver
+          problemas de diversas formas.</p>
+        <p><strong>Lección de vida:</strong> La verdadera fortaleza está en la versatilidad y la adaptabilidad. Una
+          persona que puede ver múltiples perspectivas y actuar de diferentes maneras es prácticamente imparable. Con
+          gran poder viene gran responsabilidad.</p>
+        <div class="modal-features">
+          <h4>Características clave</h4>
+          <ul>
+            <li>♕ Movimiento omnidireccional</li>
+            <li>♕ La pieza más poderosa del tablero</li>
+            <li>♕ Representa versatilidad total</li>
+            <li>♕ Símbolo de liderazgo y poder</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="rey-modal" class="modal hidden">
+    <div class="modal-content piece-modal">
+      <button class="close-btn" onclick="closePieceModal()">×</button>
+      <div class="modal-header">
+        <span class="modal-icon">♔</span>
+        <h2>Rey</h2>
+      </div>
+      <div class="modal-body">
+        <h3>Estrategia y Liderazgo</h3>
+        <p><strong>Movimiento en el tablero:</strong> El rey se mueve una casilla en cualquier dirección (horizontal,
+          vertical o diagonal). Es la pieza más importante del juego.</p>
+        <p><strong>Significado simbólico:</strong> El rey no es la pieza más poderosa, pero es la más importante. Toda
+          la estrategia del juego gira alrededor de proteger al rey. Representa el liderazgo no por poder absoluto, sino
+          por importancia estratégica y visión global.</p>
+        <p><strong>Lección de vida:</strong> El verdadero liderazgo no está en ser el más fuerte, sino en guiar
+          estratégicamente. Un buen líder entiende que su rol es guiar el equipo hacia el objetivo final. La protección
+          mutua y la lealtad son esenciales en cualquier estrategia ganadora.</p>
+        <div class="modal-features">
+          <h4>Características clave</h4>
+          <ul>
+            <li>♔ Movimiento limitado pero crucial</li>
+            <li>♔ Centro de la estrategia del juego</li>
+            <li>♔ Representa el liderazgo estratégico</li>
+            <li>♔ Símbolo de propósito y visión</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- === CARRITO === -->
+  <div id="cart-modal" class="modal hidden">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeCart()">×</button>
+      <h3 style="margin-bottom: 1.5rem; font-family: 'Playfair Display', serif;">🛒 Tu Carrito</h3>
+      <div id="cart-items" class="cart-items"></div>
+      <div class="cart-summary">
+        <p>Total: <strong id="cart-total">$0.00</strong></p>
+        <button class="btn btn-primary" onclick="checkout()">Proceder al Pago →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- === PAGO WILLOPAY === -->
+  <div id="payment-modal" class="modal hidden">
+    <div class="modal-content" style="max-width: 600px;">
+      <button class="close-btn" onclick="closePaymentModal()">×</button>
+      <div class="modal-header" style="margin-bottom: 1.5rem; padding-bottom: 1rem;">
+        <span class="modal-icon" style="font-size: 2.5rem;">💳</span>
+        <h2 style="font-size: 1.6rem;">Pago Seguro WilloPay</h2>
+      </div>
+
+      <form id="willoPaymentForm" class="contact-form" onsubmit="handlePaymentSubmit(event)">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+          <input type="text" id="pay-firstName" placeholder="Nombre" required>
+          <input type="text" id="pay-lastName" placeholder="Apellido" required>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+          <input type="text" id="pay-documentId" placeholder="Documento de Identidad" required>
+          <input type="tel" id="pay-phone" placeholder="Teléfono" required>
+        </div>
+        <div style="margin-bottom: 1rem;">
+          <input type="email" id="pay-email" placeholder="Correo Electrónico" required style="width: 100%;">
+        </div>
+        <div style="margin-bottom: 1rem;">
+          <input type="text" id="pay-cardNumber" placeholder="Número de Tarjeta" maxlength="19" required
+            style="width: 100%;">
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+          <input type="text" id="pay-expiryDate" placeholder="MM/YY" maxlength="5" required>
+          <input type="text" id="pay-cvv" placeholder="CVV" maxlength="4" required>
+        </div>
+        <button type="button" onclick="loadTestData()"
+          style="background: rgba(201,164,74,0.1); color: var(--color-accent); border: 1px solid var(--color-accent); margin-bottom: 1rem; cursor: pointer; padding: 0.5rem; border-radius: var(--radius-md); width: 100%; transition: all 0.3s;">⚡
+          Cargar Datos de Prueba</button>
+        <button type="submit" class="btn btn-primary" id="btn-process-payment" style="width: 100%;">Pagar <span
+            id="pay-amount-display">$0.00</span></button>
+      </form>
+    </div>
+  </div>
+
+  <!-- === FAQ === -->
+  <section id="faq" class="faq-section">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-label">Preguntas frecuentes</div>
+        <h2>Todo lo que <span>necesitas saber</span></h2>
+        <p>Resolvemos tus dudas para que puedas empezar tu viaje en el ajedrez sin preocupaciones.</p>
+      </div>
+      <div class="faq-list">
+        <div class="faq-item reveal delay-1">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            ¿Necesito experiencia previa para empezar?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer hidden">
+            <p>¡Para nada! Nuestros cursos están diseñados para todos los niveles. Comenzamos desde cero explicando cada
+              pieza y regla del juego. Si ya tienes experiencia, tenemos niveles intermedios y avanzados para ti.</p>
+          </div>
+        </div>
+        <div class="faq-item reveal delay-2">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            ¿Cuánto tiempo tengo para completar un curso?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer hidden">
+            <p>No hay límite de tiempo. Tienes acceso de por vida a todo el contenido. Aprende a tu propio ritmo, cuando
+              y donde quieras. El contenido siempre estará disponible para que puedas repasar.</p>
+          </div>
+        </div>
+        <div class="faq-item reveal delay-3">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            ¿Qué pasa si no estoy satisfecho con el curso?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer hidden">
+            <p>Ofrecemos una garantía total de 30 días. Si por cualquier motivo no estás satisfecho, te devolvemos el
+              100% de tu inversión sin preguntas. Tu satisfacción es nuestra prioridad.</p>
+          </div>
+        </div>
+        <div class="faq-item reveal delay-4">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            ¿Puedo descargar el contenido para verlo sin internet?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer hidden">
+            <p>Los videos se pueden descargar en los cursos avanzados para verlos offline. Los cursos básico e
+              intermedio están disponibles para streaming con alta calidad de video.</p>
+          </div>
+        </div>
+        <div class="faq-item reveal delay-5">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            ¿Hay descuentos para grupos o instituciones?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer hidden">
+            <p>Sí, ofrecemos precios especiales para grupos de 5 o más personas y para instituciones educativas.
+              Contáctanos directamente para conocer los planes corporativos y educativos disponibles.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- === CONTACTO === -->
+  <section id="contacto" class="contact-section">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-label">¿Tienes dudas?</div>
+        <h2>Ponte en <span>Contacto</span></h2>
+        <p>Estamos aquí para ayudarte. Escríbenos y te responderemos en menos de 24 horas.</p>
+      </div>
+      <div class="contact-wrapper reveal">
+        <form class="contact-form" onsubmit="handleFormSubmit(event)">
+          <div class="form-group">
+            <input type="text" id="contact-name" placeholder="Tu nombre completo" required>
+          </div>
+          <div class="form-group">
+            <input type="email" id="contact-email" placeholder="Tu correo electrónico" required>
+          </div>
+          <div class="form-group">
+            <textarea id="contact-message" placeholder="¿En qué podemos ayudarte?" rows="5" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Enviar Mensaje ✉</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- === FOOTER === -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <span class="logo-icon">♚</span>
+          <span>ChessMaster Academy</span>
+        </div>
+        <div class="footer-links">
+          <a href="#info">Beneficios</a>
+          <a href="#cursos">Cursos</a>
+          <a href="#faq">FAQ</a>
+          <a href="#contacto">Contacto</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 ChessMaster Academy. Todos los derechos reservados.</p>
+        <div class="footer-links" style="font-size: 0.8rem; gap: 1.5rem;">
+          <a href="#">Privacidad</a>
+          <a href="#">Términos</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- === SCROLL TO TOP === -->
+  <button class="scroll-top" id="scroll-top" onclick="scrollToTop()" title="Volver arriba">↑</button>
+
+  <!-- === MODAL: INICIAR SESIÓN === -->
+  <div id="login-modal" class="modal hidden">
+    <div class="modal-content auth-modal">
+      <button class="close-btn" onclick="closeAuth()">×</button>
+      <div class="auth-modal-header">
+        <span class="auth-modal-icon">♚</span>
+        <h2>Iniciar Sesión</h2>
+        <p>Accede a tu plataforma de ajedrez</p>
+      </div>
+      <form class="contact-form auth-form" onsubmit="handleLogin(event)">
+        <input type="email" id="login-email" placeholder="Correo electrónico" required style="width:100%;">
+        <input type="password" id="login-password" placeholder="Contraseña" required style="width:100%;">
+        <div id="login-error" class="auth-error" style="display:none;"></div>
+        <button type="submit" class="btn btn-primary" id="btn-login" style="width:100%;">Entrar →</button>
+      </form>
+      <p class="auth-switch">¿No tienes cuenta? <button onclick="switchToRegister()">Regístrate gratis</button></p>
+    </div>
+  </div>
+
+  <!-- === MODAL: REGISTRO === -->
+  <div id="register-modal" class="modal hidden">
+    <div class="modal-content auth-modal" style="max-width: 600px;">
+      <button class="close-btn" onclick="closeAuth()">×</button>
+      <div class="auth-modal-header" style="margin-bottom: 1.5rem; padding-bottom: 1rem;">
+        <span class="auth-modal-icon">♟</span>
+        <h2 style="font-size: 1.5rem;">Crear Cuenta</h2>
+        <p>Únete a miles de estudiantes de ajedrez</p>
+      </div>
+      <form class="contact-form auth-form" onsubmit="handleRegister(event)">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <input type="text" id="reg-name" placeholder="Nombre" required style="width:100%;">
+          <input type="text" id="reg-apellido" placeholder="Apellido" required style="width:100%;">
+
+          <input type="text" id="reg-usuario" placeholder="Nombre de usuario" required style="width:100%;">
+          <input type="email" id="reg-email" placeholder="Correo electrónico" required style="width:100%;">
+
+          <input type="number" id="reg-edad" placeholder="Edad" required style="width:100%;" min="1" max="120">
+          <input type="text" id="reg-ciudad" placeholder="Ciudad" required style="width:100%;">
+
+          <input type="text" id="reg-telefono" placeholder="Teléfono" required style="width:100%; grid-column: span 2;">
+
+          <input type="password" id="reg-password" placeholder="Contraseña (mín. 6 caracteres)" required minlength="6"
+            style="width:100%;">
+          <input type="password" id="reg-password-confirm" placeholder="Confirmar Contraseña" required minlength="6"
+            style="width:100%;">
+        </div>
+
+        <div id="register-error" class="auth-error" style="display:none; margin-top: 0.5rem;"></div>
+        <button type="submit" class="btn btn-primary" id="btn-register" style="width:100%; margin-top: 0.5rem;">Crear
+          Cuenta ♟</button>
+      </form>
+      <p class="auth-switch">¿Ya tienes cuenta? <button onclick="switchToLogin()">Inicia sesión</button></p>
+    </div>
+  </div>
+
+  <script src="../scripts/config/api-config.js"></script>
+  <script src="../scripts/modules/auth/formularios.js"></script>
+  <script src="../scripts/main.js"></script>
+</body>
+
+</html>

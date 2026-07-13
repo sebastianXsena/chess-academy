@@ -392,6 +392,7 @@ const viewTitles = {
   'admin-users':     'Panel de Usuarios',
   'admin-materials': 'Gestión de Materiales',
   'admin-stats':     'Estadísticas',
+  'play':            'Jugar Ajedrez',
 };
 
 function switchView(viewId, linkEl) {
@@ -423,6 +424,12 @@ function switchView(viewId, linkEl) {
   }
   if (viewId === 'free-materials') {
     loadFreeMaterials();
+  }
+  if (viewId === 'play') {
+    // Dar un pequeño tiempo para que la vista sea visible y el tablero calcule su tamaño
+    setTimeout(() => {
+      if (typeof initChessBoard === 'function') initChessBoard();
+    }, 50);
   }
 }
 

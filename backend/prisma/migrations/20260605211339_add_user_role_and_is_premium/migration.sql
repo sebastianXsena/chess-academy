@@ -1,8 +1,4 @@
 -- AlterEnum
-ALTER TYPE "Role" ADD VALUE 'USER';
+-- NOTE: PostgreSQL requires this to be in its own transaction/migration before the value is used.
+ALTER TYPE "Role" ADD VALUE IF NOT EXISTS 'USER';
 
--- AlterTable
-ALTER TABLE "User" ALTER COLUMN "role" SET DEFAULT 'USER';
-
--- AlterTable
-ALTER TABLE "Material" ADD COLUMN "isPremium" BOOLEAN NOT NULL DEFAULT false;

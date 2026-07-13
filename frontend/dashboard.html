@@ -8,6 +8,8 @@
   <title>ChessMaster Academy - Mi Plataforma</title>
   <link rel="stylesheet" href="main.css">
   <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css">
+  <link rel="stylesheet" href="chess/play.css">
 </head>
 
 <body>
@@ -42,6 +44,9 @@
         </a>
         <a href="#" class="sidebar-link" data-view="free-materials" onclick="switchView('free-materials', this)">
           <span class="sidebar-link-icon">📖</span> Aprendizaje Gratuito
+        </a>
+        <a href="#" class="sidebar-link" data-view="play" onclick="switchView('play', this)">
+          <span class="sidebar-link-icon">♞</span> Jugar
         </a>
       </div>
 
@@ -311,6 +316,22 @@
       <div class="dash-info-box">
         <span class="dash-info-icon">💡</span>
         <p>Completa cursos para avanzar en tu camino de maestro. Cada lección cuenta.</p>
+      </div>
+    </section>
+
+    <!-- ==================== VISTA: JUGAR ==================== -->
+    <section class="dash-view" id="view-play">
+      <div class="dash-section-header">
+        <span class="section-label">Práctica</span>
+        <h3>Jugar <span class="accent">Ajedrez</span></h3>
+      </div>
+      <p style="color: var(--color-text-muted); margin-bottom: 2rem;">Pon a prueba tus habilidades en el tablero.</p>
+      
+      <div class="chess-container">
+        <div id="myBoard"></div>
+        <div class="chess-controls">
+          <button class="btn btn-secondary" onclick="resetChessBoard()">Reiniciar Partida</button>
+        </div>
       </div>
     </section>
 
@@ -645,6 +666,10 @@
   <!-- TOAST -->
   <div class="dash-toast" id="dash-toast"></div>
 
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+  <script src="chess/play.js"></script>
   <script src="config/api-config.js"></script>
   <script src="dashboard.js"></script>
 </body>
